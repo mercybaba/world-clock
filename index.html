@@ -975,8 +975,12 @@
 
       .greeting,
       .app.world-hidden .greeting {
-        width: calc(100vw - 24px);
-        max-width: calc(100vw - 24px);
+        position: relative;
+        left: 50%;
+        width: calc(100svw - 8px);
+        max-width: calc(100svw - 8px);
+        transform: translateX(-50%);
+        box-sizing: border-box;
         font-size: clamp(1.18rem, 5.2vw, 1.55rem);
       }
 
