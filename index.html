@@ -860,15 +860,35 @@
 
     @media (max-width: 900px) {
       body {
-        padding: 72px 18px 32px;
+        padding: 88px 16px calc(96px + env(safe-area-inset-bottom));
       }
 
       .app {
+        width: 100%;
         min-height: auto;
         grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .app.world-hidden {
+        transform: translateY(-2vh);
+      }
+
+      .app.world-hidden .city-visual {
+        width: clamp(235px, 66vw, 315px);
+        height: clamp(205px, 58vw, 280px);
+      }
+
+      .app.world-hidden .local .time {
+        font-size: clamp(3.8rem, 18vw, 5.8rem);
+      }
+
+      .app.world-hidden .daily-quote {
+        max-width: min(52vw, 280px);
       }
 
       .left-panel {
+        width: 100%;
         align-items: center;
       }
 
@@ -879,35 +899,123 @@
 
       .local {
         align-items: center;
+        gap: 14px;
+      }
+
+      .greeting {
+        max-width: calc(100vw - 28px);
+        font-size: clamp(1.45rem, 6vw, 1.9rem);
+        line-height: 1.1;
+        white-space: nowrap;
+      }
+
+      .day-note {
+        max-width: calc(100vw - 34px);
+        gap: 8px;
+      }
+
+      .daily-quote {
+        max-width: min(48vw, 260px);
+      }
+
+      .city-visual {
+        width: clamp(220px, 62vw, 300px);
+        height: clamp(190px, 54vw, 265px);
       }
 
       .local .time {
-        font-size: clamp(4rem, 13vw, 7.4rem);
+        font-size: clamp(3.6rem, 17vw, 5.6rem);
         min-width: 0;
+      }
+
+      .local .date {
+        margin-top: 8px;
+        font-size: clamp(1.05rem, 4.8vw, 1.35rem);
+      }
+
+      .right-panel {
+        width: 100%;
       }
     }
 
     @media (max-width: 520px) {
       .controls {
-        left: 18px;
-        right: 18px;
-        justify-content: flex-end;
+        top: calc(12px + env(safe-area-inset-top));
+        left: 12px;
+        right: 12px;
+        justify-content: center;
+        gap: 8px;
       }
 
+      .controls button {
+        min-width: 0;
+        padding: 7px 11px;
+        font-size: 0.82rem;
+      }
+
+      .section-title {
+        align-items: center;
+      }
+
+      .section-title span {
+        font-size: 1.25rem;
+      }
+
+      .section-title small {
+        display: none;
+      }
+
+      .city-manager {
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+
+      .city-manager input {
+        min-width: 0;
+        padding: 9px 12px;
+        font-size: 0.9rem;
+      }
+
+      .city-manager button {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+      }
       .card {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr) auto;
         grid-template-areas:
-          "actions"
-          "city"
-          "time"
-          "date";
-        align-items: start;
+          "city actions"
+          "date time";
+        align-items: end;
+        padding: 16px;
+        column-gap: 12px;
       }
 
       .card .phase,
       .card .ctime {
-        justify-self: start;
-        text-align: left;
+        justify-self: end;
+        text-align: right;
+      }
+
+      .card .city {
+        font-size: 1rem;
+      }
+
+      .card .ctime {
+        min-width: 0;
+        font-size: clamp(1.55rem, 8vw, 2rem);
+      }
+
+      .card .cdate {
+        font-size: 0.82rem;
+      }
+
+      .card-action {
+        padding: 4px 8px;
+        font-size: 0.72rem;
+      }
+
+      .bg-art {
+        width: 46%;
+        opacity: 0.1;
       }
     }
   </style>
