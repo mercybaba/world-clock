@@ -874,6 +874,14 @@
         transform: translateY(-2vh);
       }
 
+      .app.world-hidden .greeting {
+        width: min(100%, calc(100vw - 28px));
+        max-width: calc(100vw - 28px);
+        font-size: clamp(1.25rem, 5.4vw, 1.7rem);
+        white-space: normal;
+        flex-wrap: wrap;
+      }
+
       .app.world-hidden .city-visual {
         width: clamp(235px, 66vw, 315px);
         height: clamp(205px, 58vw, 280px);
@@ -884,7 +892,9 @@
       }
 
       .app.world-hidden .daily-quote {
-        max-width: min(52vw, 280px);
+        max-width: min(72vw, 340px);
+        white-space: normal;
+        line-height: 1.35;
       }
 
       .left-panel {
@@ -917,11 +927,15 @@
 
       .day-note {
         max-width: calc(100vw - 34px);
+        width: calc(100vw - 34px);
+        flex-wrap: wrap;
         gap: 8px;
       }
 
       .daily-quote {
-        max-width: min(48vw, 260px);
+        max-width: min(72vw, 340px);
+        white-space: normal;
+        line-height: 1.35;
       }
 
       .city-visual {
@@ -957,6 +971,24 @@
         min-width: 0;
         padding: 7px 11px;
         font-size: 0.82rem;
+      }
+
+      .greeting,
+      .app.world-hidden .greeting {
+        width: calc(100vw - 24px);
+        max-width: calc(100vw - 24px);
+        font-size: clamp(1.18rem, 5.2vw, 1.55rem);
+      }
+
+      .day-note,
+      .app.world-hidden .day-note {
+        width: calc(100vw - 28px);
+        max-width: calc(100vw - 28px);
+      }
+
+      .daily-quote,
+      .app.world-hidden .daily-quote {
+        max-width: calc(100vw - 118px);
       }
 
       .section-title {
