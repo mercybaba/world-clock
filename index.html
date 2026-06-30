@@ -975,9 +975,12 @@
 
       .greeting,
       .app.world-hidden .greeting {
-        width: calc(100vw - 24px);
-        max-width: calc(100vw - 24px);
-        font-size: clamp(1.18rem, 5.2vw, 1.55rem);
+        width: 100vw;
+        max-width: 100vw;
+        padding: 0 6px;
+        box-sizing: border-box;
+        font-size: clamp(1.16rem, 5vw, 1.48rem);
+        column-gap: 0.18em;
       }
 
       .day-note,
