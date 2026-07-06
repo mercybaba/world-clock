@@ -1273,20 +1273,6 @@
       return ((hour * 3600 + minute * 60 + second) / 86400) * 100;
     }
 
-    function quoteForDate(date, timeZone) {
-      const parts = new Intl.DateTimeFormat("en-US", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        timeZone,
-      }).formatToParts(date);
-      const key = parts
-        .filter((part) => part.type !== "literal")
-        .map((part) => Number(part.value))
-        .reduce((sum, value) => sum + value, 0);
-      return dailyQuotes[key % dailyQuotes.length];
-    }
-
     /* ---------- 昼夜阶段 ---------- */
     function phaseInfo(hour) {
       if (hour < 5)  return { icon: "🌙", glow: "rgba(99,102,241,0.35)" };
@@ -1949,76 +1935,34 @@
       `,
     };
 
-    const dailyQuotes = [
-      "Make this hour count.",
-      "Small moments become the day.",
-      "Time moves. You choose the rhythm.",
-      "One city, one moment, one breath.",
-      "The world is awake somewhere.",
-      "Start where you are.",
-      "Let this hour be enough.",
-      "A quiet minute still matters.",
-      "Keep your pace.",
-      "Now is a place too.",
+    const famousQuotes = [
+      { text: "The two most powerful warriors are patience and time.", author: "Leo Tolstoy" },
+      { text: "Lost time is never found again.", author: "Benjamin Franklin" },
+      { text: "Time is the wisest counsellor of all.", author: "Pericles" },
+      { text: "The future depends on what you do today.", author: "Mahatma Gandhi" },
+      { text: "It is not that we have a short time to live, but that we waste a lot of it.", author: "Seneca" },
+      { text: "The trouble is, you think you have time.", author: "Buddha" },
+      { text: "Time you enjoy wasting is not wasted time.", author: "John Lennon" },
+      { text: "Yesterday is gone. Tomorrow has not yet come. We have only today.", author: "Mother Teresa" },
+      { text: "Better three hours too soon than a minute too late.", author: "William Shakespeare" },
+      { text: "You may delay, but time will not.", author: "Benjamin Franklin" },
+      { text: "The key is in not spending time, but in investing it.", author: "Stephen R. Covey" },
+      { text: "Time is what we want most, but what we use worst.", author: "William Penn" },
+      { text: "Either you run the day, or the day runs you.", author: "Jim Rohn" },
+      { text: "How we spend our days is how we spend our lives.", author: "Annie Dillard" },
+      { text: "Time flies over us, but leaves its shadow behind.", author: "Nathaniel Hawthorne" },
     ];
 
-    let liveHeadline = null;
-    let liveHeadlines = [];
-    let liveHeadlineIndex = -1;
-    let liveHeadlineFetchedAt = 0;
+    let quoteIndex = Math.floor(Math.random() * famousQuotes.length);
 
-    function fallbackQuote(now, timeZone) {
-      return quoteForDate(now, timeZone);
+    function renderHeadline() {
+      const quote = famousQuotes[quoteIndex % famousQuotes.length];
+      dailyQuoteEl.innerHTML = `“${escapeHtml(quote.text)}” — ${escapeHtml(quote.author)}`;
     }
 
-    function renderHeadline(now) {
-      if (liveHeadline) {
-        const title = escapeHtml(liveHeadline.title);
-        const url = escapeHtml(liveHeadline.url);
-        dailyQuoteEl.innerHTML = url
-          ? `<a href="${url}" target="_blank" rel="noreferrer">HN · ${title}</a>`
-          : `HN · ${title}`;
-        return;
-      }
-      dailyQuoteEl.textContent = fallbackQuote(now, mainZone.tz);
-    }
-
-    async function fetchLiveHeadline() {
-      try {
-        const topIdsResponse = await fetch("https://hacker-news.firebaseio.com/v0/topstories.json", { cache: "no-store" });
-        if (!topIdsResponse.ok) throw new Error("Failed to fetch HN top stories");
-        const ids = (await topIdsResponse.json()).slice(0, 30);
-        const items = await Promise.all(ids.map(async (id) => {
-          try {
-            const itemResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`, { cache: "no-store" });
-            return itemResponse.ok ? itemResponse.json() : null;
-          } catch {
-            return null;
-          }
-        }));
-        liveHeadlines = items
-          .filter((item) => item?.title && !item.deleted && !item.dead)
-          .map((item) => ({
-            title: item.title,
-            url: item.url || `https://news.ycombinator.com/item?id=${item.id}`,
-          }));
-        rotateLiveHeadline();
-      } catch {
-        liveHeadline = null;
-        renderHeadline(new Date());
-      }
-    }
-
-    function rotateLiveHeadline() {
-      if (!liveHeadlines.length) {
-        liveHeadline = null;
-        renderHeadline(new Date());
-        return;
-      }
-      liveHeadlineIndex = (liveHeadlineIndex + 1) % liveHeadlines.length;
-      liveHeadline = liveHeadlines[liveHeadlineIndex];
-      liveHeadlineFetchedAt = Date.now();
-      renderHeadline(new Date());
+    function rotateQuote() {
+      quoteIndex = (quoteIndex + 1) % famousQuotes.length;
+      renderHeadline();
     }
 
     let mainZone = {
@@ -2270,7 +2214,6 @@
       const dayProgress = getZonedDayProgress(now, mainZone.tz);
       dayProgressTextEl.textContent = `Today ${dayProgress.toFixed(1)}%`;
       dayNoteEl.style.setProperty("--progress", `${dayProgress}%`);
-      renderHeadline(now);
 
       const localHour = getZonedHMS(now, mainZone.tz).hour;
       const g = greetingFor(localHour);
@@ -2337,9 +2280,8 @@
     syncMainDom();
     syncCardDom();
     render(new Date(), true);
-    fetchLiveHeadline();
-    setInterval(rotateLiveHeadline, 2 * 60 * 1000);
-    setInterval(fetchLiveHeadline, 10 * 60 * 1000);
+    renderHeadline();
+    setInterval(rotateQuote, 30 * 1000);
     loop();
     if (new URLSearchParams(location.search).get("gallery") === "1") {
       renderVisualGallery();
