@@ -2046,7 +2046,7 @@
       return {
         tz: seed.tz,
         city,
-        shortName: englishCityName(seed.shortName ?? city, seed.tz),
+        shortName: display?.shortName ?? englishCityName(seed.shortName ?? city, seed.tz),
         art: bgArtByVisual[visual] ?? seed.art ?? artByTz[seed.tz] ?? defaultArt,
         visual,
       };
@@ -2055,7 +2055,7 @@
     const initialCardZones = Array.from(cards, (card) => zoneFromSeed({
       tz: card.dataset.tz,
       city: card.querySelector(".city").textContent,
-      shortName: card.querySelector(".city").textContent.split(" ")[0],
+      shortName: card.querySelector(".city").textContent,
       visual: visualByTz[card.dataset.tz],
     }));
 
